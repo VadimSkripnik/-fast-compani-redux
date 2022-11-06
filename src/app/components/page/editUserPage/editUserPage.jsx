@@ -7,14 +7,11 @@ import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
 import { useAuth } from "../../../hooks/useAuth";
-// import { useProfessions } from "../../../hooks/useProfession";
 import { getQualities, getQualitiesLoadingStatus } from "../../../store/qualities";
 import {
     getProfessions,
     getProfessionsLoadingStatus
 } from "../../../store/professions";
-
-// import { getProfessions, getProfessionsLoadingStatus } from "../../../store/profession";
 import { useSelector } from "react-redux";
 
 const EditUserPage = () => {
