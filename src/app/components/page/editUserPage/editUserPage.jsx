@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { validator } from "../../../utils/validator";
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
-import { useAuth } from "../../../hooks/useAuth";
-import { getQualities, getQualitiesLoadingStatus } from "../../../store/qualities";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    getQualities,
+    getQualitiesLoadingStatus
+} from "../../../store/qualities";
 import {
     getProfessions,
     getProfessionsLoadingStatus
 } from "../../../store/professions";
-import { useSelector } from "react-redux";
+import { getCurrentUserData, updateUser } from "../../../store/users";
 
 const EditUserPage = () => {
-    const { userId } = useParams();
+    const dispatch = useDispatch();
     const history = useHistory();
-    const [isLoading, setIsLoading] = useState(false);
-    const { currentUser, updateUserData } = useAuth();
-    const [data, setData] = useState({
-        name: "",
-        email: "",
-        profession: "",
-        sex: "male",
-        qualities: []
-    });
-
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState();
+    const currentUser = useSelector(getCurrentUserData());
+    console.log(currentUser);
     const qualities = useSelector(getQualities());
     const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
     const qualitiesList = qualities.map((q) => ({
@@ -41,19 +38,18 @@ const EditUserPage = () => {
     }));
     const [errors, setErrors] = useState({});
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        await updateUserData({
-            ...data,
-            qualities: data.qualities.map((q) => q.value)
-        });
+        dispatch(
+            updateUser({
+                ...data,
+                qualities: data.qualities.map((q) => q.value)
+            })
+        );
 
         history.push(`/users/${currentUser._id}`);
-        console.log({
-            ...data
-        });
     };
     function getQualitiesListByIds(qualitiesIds) {
         const qualitiesArray = [];
@@ -146,7 +142,7 @@ const EditUserPage = () => {
                                 name="profession"
                                 onChange={handleChange}
                                 value={data.profession}
-                                // error={errors.profession}
+                                error={errors.profession}
                             />
                             <RadioField
                                 options={[
@@ -184,3 +180,4 @@ const EditUserPage = () => {
 };
 
 export default EditUserPage;
+
