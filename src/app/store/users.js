@@ -90,16 +90,10 @@ export const loadUsersList = () => async (dispatch, getState) => {
     }
 };
 
-// const authRequested = createAction("users/authRequested");
-
-// const userCreateRequested = createAction("users/userCreateRequested");
-// const createUserFailed = createAction("users/createUserFailed");
-
 export const login =
     ({ payload, redirect }) =>
     async (dispatch) => {
         const { email, password } = payload;
-        // dispatch(authRequested());
         try {
             const data = await authService.login({ email, password });
             dispatch(authRequestSuccess({ userId: data.localId }));
@@ -111,7 +105,6 @@ export const login =
     };
 
     export const updateUser = (payload) => async (dispatch) => {
-        // dispatch(userUpdateRequested());
         try {
             const { content } = await userService.update(payload);
             dispatch(userUpdateSuccessed(content));
@@ -125,7 +118,6 @@ export const login =
 export const signUp =
     ({ email, password, ...rest }) =>
     async (dispatch) => {
-        // dispatch(authRequested());
         try {
              const data = await authService.register({ email, password });
             localStorageService.setTokens(data);
@@ -158,7 +150,6 @@ export const logOut = () => (dispatch) => {
 
 function createUser(payload) {
     return async function (dispatch) {
-        // dispatch(userCreateRequested());
         try {
             const { content } = await userService.create(payload);
             dispatch(userCreated(content));
